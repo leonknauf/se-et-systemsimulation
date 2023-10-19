@@ -26,8 +26,19 @@
 
 function y = fourier_series_fun_01(a0,a,b,T,A,t);
 
+% w0 berechnen
 w_0 = 2*pi/T;
 
+% Anzahl an Koeffizienten aus Matrixgröße von a ermitteln
+N_koeff = size(a,2);
+
+% Fouriereihe berechnen mit Formel aus Teilaufgabe 5
+y = a0/2 + A * (a * cos(w_0*((1:N_koeff)'.*repmat(t,N_koeff,1))) +...
+                b * sin(w_0*((1:N_koeff)'.*repmat(t,N_koeff,1))));
+
+
+
+% Alternative Lösung mit Schleifen
 
 % sum_elements = zeros(1,size(t,2));
 % sum_element = zeros(1,size(a,2));
@@ -40,7 +51,3 @@ w_0 = 2*pi/T;
 % end
 % 
 % y = a0/2 + A .* sum_elements;
-
-N_koeff = size(a,2);
-y = a0/2 + A * (a * cos(w_0*((1:N_koeff)'.*repmat(t,N_koeff,1))) +...
-                b * sin(w_0*((1:N_koeff)'.*repmat(t,N_koeff,1))));
