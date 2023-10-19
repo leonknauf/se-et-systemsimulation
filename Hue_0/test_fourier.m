@@ -53,7 +53,7 @@ Beispiel = 5;   % 1: Rechteck ungerade
                 % 5: e-Funktion
 
 % Ausgabeoptionen
-Option = 1;     % 1: Funktion f(t)
+Option = 3;     % 1: Funktion f(t)
                 % 2: Alle Harmonischen
                 % 3: Alle Teilsummen
                 % 4: f(t) mittels fourier_series_fun_01
@@ -124,9 +124,7 @@ t = linspace(t_start,t_ende,N_werte);
 y = fourier_series_fun_02(a0,a,b,T,A,t,Option);
 
 % Anzahl an Kurven wenn nötig begrenzen
-if size(y,1) > 10
-    y = y(1:10,:);
-end
+y = y(1:min(10, size(y,1)),:);
 
 % Berechnen der Amplituden
 c = [a0/2 abs(A .* sqrt(a.^2 + b.^2))];
