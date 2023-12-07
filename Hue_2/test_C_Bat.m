@@ -3,6 +3,12 @@ clearvars;  % workspace löschen
 
 num_parameters = 2;
 
+
+f = figure;
+f.Position = [360 140 1200 800];
+f.NumberTitle = 'off';
+f.Name = 'Hausübung 2';
+
 for para = 1:num_parameters
     switch para
         case 1
@@ -38,9 +44,9 @@ for para = 1:num_parameters
     
     [~,y] = ode45(@dgl_C_Bat,t,y0,[],Tau_Bat, Tau_C1, Tau_C2);	
     
-    U_Bat(:,para) =y(:,1);  % Strom [A]
-    U_Last(:,para)=y(:,2);  % Spannung am Kondensator[V]
-    t_in_h(:,para) = (t/3600);
+    U_Bat =y(:,1);  % Strom [A]
+    U_Last=y(:,2);  % Spannung am Kondensator[V]
+    t_in_h = (t/3600);
 
     p0 = [0.8 -1/500000 -0.8 -1/1000];
     p=fminsearch(@LadeFkt_f_min_fun,p0,[],t,y(:,2)');
@@ -48,27 +54,48 @@ for para = 1:num_parameters
     c2 = p(2);
     c3 = p(3);
     c4 = p(4);
-    U_Last_est(:,para) = c1 * exp(c2*t)+c3*exp(c4*t);
+    U_Last_est = c1 * exp(c2*t)+c3*exp(c4*t);
        
-    % figure
-    % plot(t_in_h,U_Bat,'b',t_in_h,U_Last,'r')
-    % title('Hue_2: Kondensator als Batterie')
-    % xlabel('t [h]')
-    % ylabel('U_B_a_t [V]; U_L_a_s_t [V]')
-    % grid
-    % legend('U_B_a_t', 'U_L_a_s_t')
+    plot1 = subplot(num_parameters*2,1,(para-1)*2 + 1);  
+    plot(t_in_h,U_Bat,'b',t_in_h,U_Last,'r');
+    title(['Kondensator als Batterie Paramterwerte ' num2str(para) ':']);
+    xlabel('t [h]'); 
+    ylabel('U_B [V]; U_L [V]');
+    grid;
+    legend('U_B', 'U_L');
+
+    plot2 = subplot(num_parameters*2,1,(para)*2);  
+    plot(t_in_h,U_Last_est,'g',t_in_h(1:15:end),U_Last(1:15:end),'r*');
+    title('Resultierende Funktion durch fminsearch:');
+    xlabel('t [h]'); 
+    ylabel('U_L_,_e_s_t [V]; U_L [V]');
+    legend('U_L_,_e_s_t', 'U_L');
+
+
+    pos1 = get(plot1,'Position');
+    pos2 = get(plot2,'Position');
+    if para<=num_parameters/2
+        pos1(2) = pos1(2) + 0.03;
+        pos2(2) = pos2(2) + 0.03;
+    else
+        pos1(2) = pos1(2) - 0.03;
+        pos2(2) = pos2(2) - 0.03;
+    end
+    set (plot1, 'Position', pos1)
+    set (plot2, 'Position', pos2)
+    annotation("line",[0.05 0.95],[0.506 0.506]);
 end
 
-figure
-for para = 1:num_parameters
-    subplot(num_parameters*2,1,para);  
-    plot(t_in_h(:,para),U_Bat(:,para),'b',t_in_h(:,para),U_Last(:,para),'r',t_in_h(:,para),U_Last_est(:,para),'g');
-    title(['Hue2: Kondensator als Batterie (' num2str(para) ')']);
-    xlabel('t [h]'); 
-    ylabel('U_B_a_t [V]; U_L_a_s_t [V]');
-    grid;
-    legend('U_B_a_t', 'U_L_a_s_t');
-end
+% figure
+% for para = 1:num_parameters
+%     subplot(num_parameters*2,1,para);  
+%     plot(t_in_h(:,para),U_Bat(:,para),'b',t_in_h(:,para),U_Last(:,para),'r',t_in_h(:,para),U_Last_est(:,para),'g');
+%     title(['Hue2: Kondensator als Batterie (' num2str(para) ')']);
+%     xlabel('t [h]'); 
+%     ylabel('U_B_a_t [V]; U_L_a_s_t [V]');
+%     grid;
+%     legend('U_B_a_t', 'U_L_a_s_t');
+% end
 
 function Yp = dgl_C_Bat(~,y,Tau_Bat, Tau_C1, Tau_C2)
 
