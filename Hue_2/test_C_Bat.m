@@ -25,11 +25,12 @@
 %
 % Datum:    07.12.2023
 %
-% Änderung: 
+% Änderung: 13.12.2023  - Startparameter fminsearch 2. Funktion hinzugefügt
+%                       - Grafische Ausgabe angepasst
 %
 % Benötigte eigene externe functions: keine
 %
-% siehe auch: 
+% siehe auch: ode45, fminsearch
 %
 %--------------------------------------------------------------------------  
 
@@ -37,13 +38,6 @@
 
 close all;  % Schließen von offenen Plots
 clearvars;  % Variablenspeicher leeren
-
-%% Grafische Ausgabe initialisieren
-
-f = figure; % Generieren eines Ausgabefensters 
-f.Position = [360 140 1200 800]; % Ändern der Fenstergröße
-f.NumberTitle = 'off'; % Entfernen von 'Figure 1' aus dem Fenstertitel
-f.Name = 'Hausübung 2'; % Anpassen des Fenstertitels
 
 %% Schleife über alle Parametervarianten
 
@@ -57,13 +51,15 @@ for para = 1:num_parameters
     switch para
 
         case 1 % Parameter setzen Variante 1
-            C_Last = 6;     % Kapazität CLast [F]
-            R_Last = 100000;% Widerstand RLast [Ohm]
-            U_Last_0 = 0;   % Spannung ULast zum Zeitpunkt t=0 [V]        
+            C_Last = 6;                         % Kapazität CLast [F]
+            R_Last = 100000;                    % Widerstand RLast [Ohm]
+            U_Last_0 = 0;                       % Spannung ULast zum Zeitpunkt t=0 [V]        
+            p0 = [0.8 -1/500000 -0.8 -1/1000];  % Startwerte für best fit an e-Funktion 
         case 2 % Parameter setzen Variante 2
-            C_Last = 20;    % Kapazität CLast [F]
-            R_Last = 1000;  % Widerstand RLast [Ohm]
-            U_Last_0 = 0;   % Spannung ULast zum Zeitpunkt t=0 [V]
+            C_Last = 20;                        % Kapazität CLast [F]
+            R_Last = 1000;                      % Widerstand RLast [Ohm]
+            U_Last_0 = 0;                       % Spannung ULast zum Zeitpunkt t=0 [V]
+            p0 = [0.5 0 -0.5  -1/1000];         % Startwerte für best fit an e-Funktion 
     end
     
     % Weitere Parameter setzen
@@ -86,22 +82,19 @@ for para = 1:num_parameters
     %% Funktionswerte berechnen
 
     % Anfangswerte als Spaltenvektor
-    y0 = [U_Bat_0 U_Last_0]';
+    y0 = [U_Last_0 U_Bat_0]';
     
     % Berechnen der Funktionswerte mittels ode45
     [~,y] = ode45(@dgl_C_Bat,t,y0,[],Tau_Bat, Tau_C1, Tau_C2);	
     
     % Ergebnisse der Berechnung
-    U_Bat =y(:,1);  % UBat [V]
-    U_Last=y(:,2);  % ULast [V]
+    U_Last=y(:,1);  % ULast [V]
+    U_Bat =y(:,2);  % UBat [V]
 
     %% Annähendere Funktion mittels fminsearch bestimmen
-
-    % Startparameter definieren
-    p0 = [0.8 -1/500000 -0.8 -1/1000];
-
+    
     % Auruf von fminsearch
-    p=fminsearch(@LadeFkt_f_min_fun,p0,[],t,y(:,2)');
+    p=fminsearch(@LadeFkt_f_min_fun,p0,[],t,U_Last');
 
     % Ermittelte Parameter auslesen
     c1 = p(1);
@@ -117,41 +110,34 @@ for para = 1:num_parameters
     % Zeitvektor in Stunden berechnen
     t_in_h = (t/3600);
 
+    % Fenster initialisieren
+    f = figure(para); % Generieren eines Ausgabefensters 
+    if (para <= num_parameters/2)
+        f.Position(1) = f.Position(1) - f.Position(3)/2;    % Positionieren des Fensters nach links
+    else 
+        f.Position(1) = f.Position(1) + f.Position(3)/2;    % Positionieren des Fensters nach rechts
+    end
+    f.NumberTitle = 'off'; % Entfernen von 'Figure 1' aus dem Fenstertitel
+    f.Name = ['Hausübung 2: Kondesator als Batterie (Parametersatz ', num2str(para), ')']; % Anpassen des Fenstertitels
+
     % Erster Plot: UBat und ULast
-    plot1 = subplot(num_parameters*2,1,(para-1)*2 + 1);                     % Subplot erstellen
-    plot(t_in_h,U_Bat,'b',t_in_h,U_Last,'r');                               % Funktionen UBat und ULast darstellen
-    title(['Kondensator als Batterie Paramterwerte ' num2str(para) ':']);   % Titel des Plots anpassen
-    xlabel('t [h]');                                                        % Beschriftung X-Achse
-    ylabel('U_B [V]; U_L [V]');                                             % Beschriftung Y-Achse
-    grid;                                                                   % Hintergrundraster aktivieren
-    legend('U_B', 'U_L');                                                   % Legende einfügen
+    subplot(2,1,1);                     % Subplot erstellen
+        plot(t_in_h,U_Last,'r',t_in_h,U_Bat,'b');                               % Funktionen UBat und ULast darstellen
+        title('Spannungsverlauf');                                              % Titel des Plots anpassen
+        xlabel('t [h]');                                                        % Beschriftung X-Achse
+        ylabel('U_L [V]; U_B [V]');                                             % Beschriftung Y-Achse
+        grid;                                                                   % Hintergrundraster aktivieren
+        legend('U_L','U_B');                                                   % Legende einfügen
 
     % Zweiter Plot: ULast und ULastEst
-    plot2 = subplot(num_parameters*2,1,(para)*2);                           % Subplot erstellen
-    plot(t_in_h,U_Last_est,'g',t_in_h(1:15:end),U_Last(1:15:end),'r*');     % Funktionen ULast und ULastEst darstellen
-    title('Resultierende Funktion durch fminsearch:');                      % Titel des Plots anpassen
-    xlabel('t [h]');                                                        % Beschriftung X-Achse
-    ylabel('U_L_,_e_s_t [V]; U_L [V]');                                     % Beschriftung Y-Achse
-    grid;                                                                   % Hintergrundraster aktivieren
-    legend('U_L_,_e_s_t', 'U_L');                                           % Legende einfügen
+    subplot(2,1,2);                           % Subplot erstellen
+        plot(t_in_h,U_Last_est,'g',t_in_h(1:15:end),U_Last(1:15:end),'r*');     % Funktionen ULast und ULastEst darstellen
+        title('Resultierende Funktion durch fminsearch');                       % Titel des Plots anpassen
+        xlabel('t [h]');                                                        % Beschriftung X-Achse
+        ylabel('U_L_,_e_s_t [V]; U_L [V]');                                     % Beschriftung Y-Achse
+        grid;                                                                   % Hintergrundraster aktivieren
+        legend('U_L_,_e_s_t', 'U_L');                                           % Legende einfügen
 
-    % Position der Plots anpassen
-    pos1 = get(plot1,'Position');   % Position des ersten Plots ermitteln
-    pos2 = get(plot2,'Position');   % Position des zweiten Plots ermitteln
-    if para<=num_parameters/2       % Für erste Hälfte der Parameterwerte
-        pos1(2) = pos1(2) + 0.03;   % Plot 1 nach oben verschieben
-        pos2(2) = pos2(2) + 0.03;   % Plot 2 nach oben verschieben
-    else                            % Für zweite Hälfte der Parameterwerte
-        pos1(2) = pos1(2) - 0.03;   % Plot 1 nach unten verschieben
-        pos2(2) = pos2(2) - 0.03;   % Plot 2 nach unten verschieben
-    end
-    set (plot1, 'Position', pos1)   % Position des ersten Plots setzen
-    set (plot2, 'Position', pos2)   % Position des zweiten Plots setzen
-
-    % Linie in der Mitte einfügen bei gerade Anzahl an Plots
-    if mod(num_parameters,2) == 0
-        annotation("line",[0.05 0.95],[0.506 0.506]);
-    end
 end
 
 %% function dgl_C_Bat
@@ -160,29 +146,29 @@ function Yp = dgl_C_Bat(~,y,Tau_Bat, Tau_C1, Tau_C2)
 
     % Rechnenverfahren definieren
 
-    Rechnenverfahren='Gleichungen';
-    % Rechnenverfahren='Matrix';
+    % Rechnenverfahren='Gleichungen';
+    Rechnenverfahren='Matrix';
 
     switch Rechnenverfahren
         case 'Gleichungen'
-            % Startwerte für UBat und ULast aus den Übergabeparametern lesen
-            U_Bat=y(1);
-            U_Last=y(2);
+            % Startwerte für ULast und UBat aus den Übergabeparametern lesen
+            U_Last=y(1);
+            U_Bat=y(2);
      
-            % DGLs mit den Startwerten aufstellen
-            dUB_dt=1/Tau_Bat * (U_Last - U_Bat);
+            % DGLs mit den Variablen uLast und uBat aufstellen
             dUL_dt=U_Bat/Tau_C1 - U_Last/Tau_C2;
+            dUB_dt=1/Tau_Bat * (U_Last - U_Bat);
 
             % Gleichungen als Matrix zurückgeben
-            Yp=[dUB_dt;
-                dUL_dt]; 
+            Yp=[dUL_dt;
+                dUB_dt]; 
 
         case 'Matrix'
             % DGLs in Matrixform aufstellen
-            A=[-1/Tau_Bat   1/Tau_Bat;
-                1/Tau_C1    -1/Tau_C2];
+            A=[-1/Tau_C2    1/Tau_C1;
+                1/Tau_Bat   -1/Tau_Bat];
 
-            % Mit Startparametern multiplizieren un zurückgeben
+            % Mit Variablen multiplizieren und zurückgeben
             Yp=A*y;
 
     end
