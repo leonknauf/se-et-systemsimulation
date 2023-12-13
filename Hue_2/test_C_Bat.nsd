@@ -1,57 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root xmlns:nsd="https://structorizer.fisch.lu" version="3.32-14" preRepeat="until " postFor="to" preReturn="return" postForIn="in" preWhile="while " output="OUTPUT" input="INPUT" preFor="for" preExit="exit" preLeave="leave" ignoreCase="true" preThrow="throw" preForIn="foreach" stepFor="by" namespace="" author="leonk" created="2023-12-11" changedby="leonk" changed="2023-12-11" origin="Structorizer 3.32-14" text="&#34;test_C_Bat&#34;" comment="&#34;&#34;" color="ffffff" type="program" style="nice">
+<root xmlns:nsd="https://structorizer.fisch.lu" version="3.32-14" preRepeat="until " postFor="to" preReturn="return" postForIn="in" preWhile="while " output="OUTPUT" input="INPUT" preFor="for" preExit="exit" preLeave="leave" ignoreCase="true" preThrow="throw" preForIn="foreach" stepFor="by" author="leonk" created="2023-12-11" changedby="10006237" changed="2023-12-13" origin="Structorizer 3.32-14" text="&#34;test_C_Bat&#34;" comment="" color="ffffff" type="program" style="nice">
 	<children>
-		<instruction text="&#34;Schließen von offenen Plots&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-		<instruction text="&#34;Variablenspeicher leeren&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-		<instruction text="&#34;Generieren eines Ausgabefensters &#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-		<instruction text="&#34;Anpassen der Ausgabefensteroptionen (Titel und Größe)&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-		<instruction text="&#34;Anzahl an Parametervarianten definieren&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-		<for text="&#34;Schleife über alle Parametervarianten&#34;" comment="&#34;&#34;" counterVar="dummy_counter" startValue="Schleife über alle Parametervarianten" stepConst="1" style="FREETEXT" color="ffffff" disabled="0">
+		<instruction text="&#34;Schließen von offenen Plots&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+		<instruction text="&#34;Variablenspeicher leeren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+		<instruction text="&#34;Anzahl an Parametervarianten definieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+		<for text="&#34;Schleife über alle Parametervarianten&#34;" comment="" counterVar="dummy_counter" startValue="Schleife über alle Parametervarianten" stepConst="1" style="FREETEXT" color="ffffff" disabled="0">
 			<qFor>
-				<case text="&#34;parametervariante&#34;,&#34;1&#34;,&#34;2&#34;,&#34;%&#34;" comment="&#34;&#34;" color="ffffff" disabled="0">
+				<case text="&#34;parametervariante&#34;,&#34;1&#34;,&#34;2&#34;,&#34;%&#34;" comment="" color="ffffff" disabled="0">
 					<qCase>
-						<instruction text="&#34;Parameter C_Last, R_Last und U_Last_0 setzen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
+						<instruction text="&#34;Parameter C_Last, R_Last und U_Last_0 setzen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+						<instruction text="&#34;Startparameter für fminsearch definieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
 					</qCase>
 					<qCase>
 						<instruction text="&#34;Parameter C_Last, R_Last und U_Last_0 setzen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+						<instruction text="&#34;Startparameter für fminsearch definieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
 					</qCase>
 					<qCase color="ffffff">
 					</qCase>
 				</case>
-				<instruction text="&#34;Parameter C_Bat, R_Bat und U_Bat_0 setzen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;R_P, Tau_Bat, Tau_C1 und Tau_C2 berechnen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Simulationsdauer und Anzahl Stützstellen definieren&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Abtastzeit und Zeitvektor berechnen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Anfangswerte der Funktionen als Spaltenvektor definieren&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Berechnen der Funktionswerte mittels ode45&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Ergebnisse der Berechnung in Variablen schreiben&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Startparameter für fminsearch definieren&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Funktion fminsearch aufrufen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Mit ermittelten Parametern die Funktionswerte berechnen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Zeitvektor in Stunden berechnen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Subplot für UBat und ULast erstellen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Funktionswerte darstellen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Titel, Achsenbeschriftung, Raster und Legende konfigurieren&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Subplot für ULast und Ergebnisfunktion aus fminsearch erstellen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Parameter C_Bat, R_Bat und U_Bat_0 setzen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;R_P, Tau_Bat, Tau_C1 und Tau_C2 berechnen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Simulationsdauer und Anzahl Stützstellen definieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Abtastzeit und Zeitvektor berechnen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Anfangswerte der Funktionen als Spaltenvektor definieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Berechnen der Funktionswerte mittels ode45&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Ergebnisse der Berechnung in Variablen schreiben&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Funktion fminsearch aufrufen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Mit ermittelten Parametern die Funktionswerte berechnen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Zeitvektor in Stunden berechnen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Generieren eines Ausgabefensters &#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Anpassen der Ausgabefensteroptionen (Titel und Position)&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Subplot für UBat und ULast erstellen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
 				<instruction text="&#34;Funktionswerte darstellen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
 				<instruction text="&#34;Titel, Achsenbeschriftung, Raster und Legende konfigurieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
-				<instruction text="&#34;Positionen beider Plots ermitteln&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<alternative text="&#34;Aktuelle Parametervariante &#60;= der Gesamtanzahl&#34;" comment="&#34;&#34;" color="ffffff" disabled="0">
-					<qTrue>
-						<instruction text="&#34;Positionen von Plot 1 und 2 nach oben verschieben&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-					</qTrue>
-					<qFalse>
-						<instruction text="&#34;Positionen von Plot 1 und 2 nach unten verschieben&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-					</qFalse>
-				</alternative>
-				<instruction text="&#34;Geänderte Positionen beider Plots setzen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-				<alternative text="&#34;Anzahl an Parametervarianten ist gerade&#34;" comment="&#34;&#34;" color="ffffff" disabled="0">
-					<qTrue>
-						<instruction text="&#34;Waagrechte Linie in der Mitte einfügen&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
-					</qTrue>
-					<qFalse color="ffffff">
-					</qFalse>
-				</alternative>
+				<instruction text="&#34;Subplot für ULast und Ergebnisfunktion aus fminsearch erstellen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Funktionswerte darstellen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Titel, Achsenbeschriftung, Raster und Legende konfigurieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
 			</qFor>
 		</for>
 	</children>
