@@ -2,14 +2,16 @@
 %
 % Erklärung
 %
+% Dieses m-File berechnet die Motordrehzahl aus den angegebenen
+% Systemvariablen für unterschiedlichen Kompensationsfaktoren
 % 
-% 
-% Input:   
+% Input: Motorparameter, Simulationsparameter, Systemparameter, 
+%        Simulationszeit, Anfangsbedingung
 %           
-% Output:   
-%           
+% Output: Grafische Darstellung der Motordrehzahl für verschiedene
+%         Kompensationfaktoren          
 %
-% Beispiel:
+% Beispiel: 
 %
 % Autor:	Leon Knauf
 %
@@ -45,13 +47,13 @@ La=10e-3;                                       % Ankerinduktivität [H]
 J=5e-7;                                         % Massenträgheitsmoment [kgm²]
 k_var=[0 0.5 sqrt(2)/2 0.8 0.9 0.97 1.0]*Ra;    % Variationswerte für die Kompensation [Ohm]
 
-Ta=La/Ra;                                       % Ankerkreiskonstante [s]
+Ta=La/Ra;                                       % Zeitkonstante Tau [s]
 
 
 %% Eingangsparameter definieren
 
 Ua_0=5;         % Spannung für die Solldrehzahl [V]
-M_Last=4e-3;	% Mechanischer Lastbereich [Nm]
+M_Last=4e-3;	% Mechanische Last [Nm]
 dM_Last_dt=0;   % Zeitabhängige Laständerung [Nm/s]
 
 %% Simulationszeit festlegen
@@ -66,9 +68,10 @@ t=linspace(0,tmax,anz_werte);   % Zeitvektor [s]
 y0=[0 0]'; % Anfangsbedingung in einer Spalten-Matrix
 
 
-%%
+%% Ausgabevariable initialisieren
 
 n=zeros(anz_werte,length(k_var)); % Matrix für die Drehzahlwerte
+
 
 %% Aufruf ode45 für jede Variation
 
@@ -78,27 +81,33 @@ for i=1:1:length(k_var)
     % Berechnen der Drehzahl
     n(:,i)=y(:,2)*60/(2*pi); % Drehzahl [1/min]
 end
-    
-plot(t*1e3,n)                                                   % Funktionen n(t) darstellen
+
+
+%% Grafische Ausgabe
+
+t=t*1000;                                                       % Zeitvektor in ms umwandeln
+plot(t,n)                                                       % Funktionen n(t) in ms darstellen
 xlabel('t [ms]')                                                % Beschriftung X-Achse
-ylabel('n [rpm]')                                               % Beschriftung Y-Achse
-title('Drehzahl-Verlauf mit 7 Kompensationswerten')             % Titel des Plots anpassen
+ylabel('n [U/min]')                                             % Beschriftung Y-Achse
+title('Drehzahlverlauf des Motors')                             % Titel des Plots anpassen
 legend('0', '0.5', '0.707', '0.8', '0.9', '0.97', '1.0');       % Legende einfügen
 grid;                                                           % Hintergrundraster aktivieren
 
 
 %% function DGL_Motor
+
 function Yp=DGL_Motor(~,y, Ua_0, Ra, La, k, Psi, J, M_Last, dM_last_dt)
 
-    k1 = (Ra-k)/La;                           % Berechnung Faktor k1
-    k2 = Psi^2/(La*J);                         % Berechnung Faktor k2
-    R = (Psi/(La*J))*Ua_0-(((Ra-k)/(La*J))*M_Last+dM_last_dt/J);  % Berechnung Faktor R
+    % Berechnung der Faktoren
+    k1 = (Ra-k)/La;                                                 % Faktor k1
+    k2 = Psi^2/(La*J);                                              % Faktor k2
+    k3 = (Psi/(La*J))*Ua_0-(1/J*dM_last_dt+(Ra-k)/(La*J)*M_Last);   % Faktor k3
 
-    % Ueberfuehrung von k1, k2 sowie R in die System Matrix
-    A = [-k1 -k2; 1 0];                         % System-Matrix A
-    b=[R; 0];                                   % System-Matrix b
+    % Definition der Matrizen
+    A=[-k1 -k2; 1 0];
+    b=[k3; 0];
 
-    % Bildung des DGL-Systems
-    Yp=A*y+b;                                   % Yp=[a' n']
+    % Angabe der DGL in Matrixform
+    Yp=A*y+b;
 
 end
